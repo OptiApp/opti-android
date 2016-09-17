@@ -13,11 +13,21 @@
         tools:context="io.github.imruahmed.opti.MapsActivity" />
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/add_stop_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:elevation="4dp"
         android:layout_gravity="bottom|right"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/continue_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:elevation="4dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="90dp" />
 
 </FrameLayout>

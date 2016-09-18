@@ -64,6 +64,8 @@ public class PlaceAdapter extends ArrayAdapter<String> {
                     AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                     alert.setTitle("Set Duration");
                     final EditText input = new EditText(mContext);
+                    int i = mContext.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+                    input.setPadding(i, 0, i, 0);
                     input.setInputType(InputType.TYPE_CLASS_NUMBER);
                     input.setRawInputType(Configuration.KEYBOARD_12KEY);
                     alert.setView(input);

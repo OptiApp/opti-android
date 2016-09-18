@@ -6,5 +6,5 @@ public class PlaceItem {
     String name;
     String address;
     LatLng latLng;
-    int duration;
+    int duration = -1;
 }

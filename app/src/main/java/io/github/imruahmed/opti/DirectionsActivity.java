@@ -1,15 +1,22 @@
 package io.github.imruahmed.opti;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 
@@ -33,6 +40,7 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_directions);
 
         ArrayList<String> placeExtra = getIntent().getStringArrayListExtra("ROUTE");
+        Log.v("IMRAN", placeExtra.toString());
         places = new ArrayList<>();
 
         for (int i = 0; i < placeExtra.size(); i++) {
@@ -45,6 +53,8 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
             p.id = split[5];
             places.add(p);
         }
+
+        Log.v("IMRAN", places.toString());
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -52,6 +62,11 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
         new DirectionsTask().execute();
     }
 
@@ -72,7 +87,7 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
             String destination = places.get(end).latLng.latitude+","+places.get(end).latLng.longitude;
             String waypoints = "";
             for (int i = 1; i < places.size() - 1; i++) {
-                String s = places.get(0).latLng.latitude+","+places.get(0).latLng.longitude;
+                String s = places.get(i).latLng.latitude+","+places.get(i).latLng.longitude;
                 if (i != places.size() - 2) {
                     s += "|";
                 }
@@ -106,10 +121,21 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
                 if (mMap != null) {
                     Log.v("IMRAN", coords.toString());
                     PolylineOptions p = new PolylineOptions();
+                    LatLngBounds.Builder b = new LatLngBounds.Builder();
                     for (int i = 0; i < coords.size(); i++) {
+                        b.include(coords.get(i));
                         p.add(coords.get(i));
                     }
+                    for (int i = 0; i < places.size(); i++) {
+                        mMap.addMarker(new MarkerOptions().position(places.get(i).latLng)
+                                        .title(places.get(i).name));
+                        b.include(places.get(i).latLng);
+                    }
                     mMap.addPolyline(p);
+                    LatLngBounds bounds = b.build();
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+                    mMap.animateCamera(cu);
+
                 }
             }
             super.onPostExecute(aVoid);

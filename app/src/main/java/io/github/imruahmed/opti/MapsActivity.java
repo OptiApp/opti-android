@@ -95,9 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new Gson();
-                String placesExtra = gson.toJsonTree(places, new TypeToken<ArrayList<Place>>(){}.getType())
-                        .getAsJsonArray().toString();
                 Intent intent = new Intent(MapsActivity.this, ConfirmActivity.class);
                 intent.putStringArrayListExtra("placesExtra", places);
                 startActivity(intent);
@@ -125,9 +122,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
                 StringBuilder sb = new StringBuilder();
-                sb.append(place.getName()+","+place.getLatLng().latitude+","+
-                        place.getLatLng().longitude+","+place.getAddress());
-                Log.v("IMRAN", sb.toString());
+                sb.append(place.getName()+"="+place.getLatLng().latitude+"="+
+                        place.getLatLng().longitude+"="+place.getAddress()+"="+place.getId());
+
+                Log.v("IMRAN", place.getId());
                 places.add(sb.toString());
                 if (mMap != null) {
                     mMap.addMarker(new MarkerOptions().position(place.getLatLng()));

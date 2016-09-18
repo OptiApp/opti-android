@@ -2,6 +2,7 @@ package io.github.imruahmed.opti;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -68,8 +71,9 @@ public class ConfirmActivity extends AppCompatActivity {
     class RunGATask extends AsyncTask<Void, Void, Void> {
 
         private ProgressDialog progressDialog;
-        Call<ResponseBody> call;
-
+        Call<TempObj> call;
+        ArrayList<Integer> order;
+        String stuff;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -81,26 +85,37 @@ public class ConfirmActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             StringBuilder origins = new StringBuilder();
+            StringBuilder durations = new StringBuilder();
+            StringBuilder ids = new StringBuilder();
+
             for (int i = 0; i < placeItems.size(); i++) {
                 origins.append(placeItems.get(i).latLng.latitude);
                 origins.append(",");
                 origins.append(placeItems.get(i).latLng.longitude);
+
+                durations.append(placeItems.get(i).duration);
+
+                ids.append(placeItems.get(i).id);
+
                 if (i != placeItems.size() - 1) {
                     origins.append("|");
+                    durations.append(",");
+                    ids.append(",");
                 }
             }
-            Log.v("IMRAN", origins.toString());
+            stuff = "origins="+origins.toString()+"destinations="+origins.toString()+"durations="+durations.toString()+"placeIds="+ids.toString();
+            //Log.v("IMRAN", "origins="+origins.toString()+"destinations="+origins.toString()+"durations="+durations.toString()+"placeIds="+ids.toString());
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://hackthenorth16-1758.appspot.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             TSPService service = retrofit.create(TSPService.class);
-            call = service.runTSPService(origins.toString(),
-                    origins.toString());
-
+            call = service.runTSPService(origins.toString(), origins.toString(),
+                    durations.toString(), ids.toString());
             try {
-                String body = call.execute().body().string();
-                Log.v("IMRAN YES", body);
+                order = (ArrayList<Integer>) call.execute().body().optimalRoute;
+                Log.v("IMRAN YES", order.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -112,13 +127,29 @@ public class ConfirmActivity extends AppCompatActivity {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
+            Log.v("IMRAN", stuff);
+            if (order != null) {
+                Intent intent = new Intent(mContext, DirectionsActivity.class);
+                ArrayList<String> extra = new ArrayList<>();
+                for (int i = 0; i < order.size(); i++) {
+                    extra.add(placeItems.get(order.get(i)).toString());
+                }
+                intent.putStringArrayListExtra("ROUTE", extra);
+                startActivity(intent);
+            }
             super.onPostExecute(aVoid);
         }
     }
 
     public interface TSPService {
         @GET("api/locations")
-        Call<ResponseBody> runTSPService(@Query("origins") String origins,
-                                         @Query("destinations") String destinations);
+        Call<TempObj> runTSPService(@Query("origins") String origins,
+                                    @Query("destinations") String destinations,
+                                    @Query("durations") String durations,
+                                    @Query("placeIds") String placeIds);
+    }
+
+    class TempObj {
+        List<Integer> optimalRoute;
     }
 }

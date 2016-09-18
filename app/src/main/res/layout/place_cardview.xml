@@ -34,13 +34,5 @@
             android:textSize="15sp"
             android:layout_below="@id/address_textview"/>
 
-        <EditText
-            android:id="@+id/duration_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/duration_textview"
-            android:layout_alignTop="@id/duration_textview"
-            android:inputType="number"
-            android:textSize="15sp"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

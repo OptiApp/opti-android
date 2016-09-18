@@ -3,4 +3,12 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="add_trip">Add Trip</string>
+    <string-array name="durations">
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>45 minutes</item>
+        <item>60 minutes</item>
+    </string-array>
 </resources>

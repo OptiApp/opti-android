@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -69,6 +70,19 @@ public class PlaceAdapter extends ArrayAdapter<String> {
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             Spinner spinner = (Spinner) alertDialogView.findViewById(R.id.duration_spinner);
+                            RadioButton abutton = (RadioButton) alertDialogView.findViewById(R.id.a_button);
+                            RadioButton bbutton = (RadioButton) alertDialogView.findViewById(R.id.b_button);
+
+                            if (abutton.isChecked()) {
+                                places.get(position).start = true;
+                                places.get(position).end = false;
+                            } else if (bbutton.isChecked()) {
+                                places.get(position).start = false;
+                                places.get(position).end = true;
+                            } else {
+                                places.get(position).start = false;
+                                places.get(position).end = false;
+                            }
                             int[] nums = new int[]{5, 10, 15, 30, 45, 60};
                             places.get(position).duration = nums[spinner.getSelectedItemPosition()];
                             viewHolder.durationTextView.setText("Duration: "+places.get(position).duration+" min");

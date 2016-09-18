@@ -8,6 +8,8 @@ public class PlaceItem {
     LatLng latLng;
     int duration = -1;
     String id = null;
+    boolean start = false;
+    boolean end = false;
 
     @Override
     public String toString() {

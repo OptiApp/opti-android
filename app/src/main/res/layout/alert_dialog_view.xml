@@ -5,11 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="10dp"
+        android:orientation="horizontal" >
+        <RadioButton
+            android:id="@+id/a_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Location"
+            android:paddingRight="5dp"/>
+        <RadioButton
+            android:id="@+id/b_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Location"/>
+    </RadioGroup>
+
     <Spinner
         android:id="@+id/duration_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:entries="@array/durations"
         android:spinnerMode="dropdown"
         android:layout_gravity="center">

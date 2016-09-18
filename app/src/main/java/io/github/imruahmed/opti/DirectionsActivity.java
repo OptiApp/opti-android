@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -127,8 +128,22 @@ public class DirectionsActivity extends AppCompatActivity implements OnMapReadyC
                         p.add(coords.get(i));
                     }
                     for (int i = 0; i < places.size(); i++) {
-                        mMap.addMarker(new MarkerOptions().position(places.get(i).latLng)
-                                        .title(places.get(i).name));
+                        if (i == 0) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(places.get(i).latLng)
+                                    .title(places.get(i).name)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        } else if (i == places.size() - 1) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(places.get(i).latLng)
+                                    .title(places.get(i).name)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        } else {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(places.get(i).latLng)
+                                    .title(places.get(i).name)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        }
                         b.include(places.get(i).latLng);
                     }
                     mMap.addPolyline(p);

@@ -62,6 +62,30 @@ public class ConfirmActivity extends AppCompatActivity {
                         placeItems.get(i).duration = 20;
                     }
                 }
+                Log.v("IMRAN AAA", placeItems.toString());
+                PlaceItem p = null;
+                for (int i = 0; i < placeItems.size(); i++) {
+                    if (placeItems.get(i).start) {
+                        p = placeItems.get(i);
+                        break;
+                    }
+                }
+                if (p != null) {
+                    placeItems.remove(p);
+                    placeItems.add(0, p);
+                }
+                for (int i = 0; i < placeItems.size(); i++) {
+                    if (placeItems.get(i).end) {
+                        p = placeItems.get(i);
+                        break;
+                    }
+                }
+                if (p != null) {
+                    placeItems.remove(p);
+                    placeItems.add(p);
+                }
+                Log.v("IMRAN AAA", placeItems.toString());
+
                 new RunGATask().execute();
             }
         });
